@@ -308,6 +308,7 @@ class Adafruit_BNO055 : public Adafruit_Sensor
     uint8_t _address;
     int32_t _sensorID;
     adafruit_bno055_opmode_t _mode;
+    uint8_t _fd;
 };
 
 #endif
