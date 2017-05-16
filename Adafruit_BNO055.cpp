@@ -236,6 +236,7 @@ bool Adafruit_BNO055::isFullyCalibrated(void)
 /**************************************************************************/
 bool Adafruit_BNO055::write8(adafruit_bno055_reg_t reg, uint8_t value)
 {
+  wiringPiI2CWriteReg8 (_fd, reg, data);
   return true;
 }
 
@@ -246,7 +247,7 @@ bool Adafruit_BNO055::write8(adafruit_bno055_reg_t reg, uint8_t value)
 /**************************************************************************/
 uint8_t Adafruit_BNO055::read8(adafruit_bno055_reg_t reg )
 {
-  uint8_t value = 0;
+  uint8_t value = wiringPiI2CReadReg8(_fd, reg);
   return value;
 }
 
@@ -257,6 +258,10 @@ uint8_t Adafruit_BNO055::read8(adafruit_bno055_reg_t reg )
 /**************************************************************************/
 bool Adafruit_BNO055::readLen(adafruit_bno055_reg_t reg, uint8_t * buffer, uint8_t len)
 {
+  for (uint8_t i = 0; i < len; i++) {
+    buffer[i] = wiringPiI2CReadReg8(_fd, reg);
+    reg++;
+  }
   return true;
 }
 
