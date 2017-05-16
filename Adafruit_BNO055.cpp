@@ -25,6 +25,7 @@
 
 #include <math.h>
 #include <limits.h>
+#include <unistd.h>
 
 #include "Adafruit_BNO055.h"
 
@@ -54,6 +55,12 @@ Adafruit_BNO055::Adafruit_BNO055(int32_t sensorID, uint8_t address)
 /**************************************************************************/
 bool Adafruit_BNO055::begin(adafruit_bno055_opmode_t mode)
 {
+  _fd = wiringPiI2CSetup(_address);
+
+  if (!checkID()) {
+    return false;
+  }
+
   return true;
 }
 
@@ -249,5 +256,23 @@ uint8_t Adafruit_BNO055::read8(adafruit_bno055_reg_t reg )
 /**************************************************************************/
 bool Adafruit_BNO055::readLen(adafruit_bno055_reg_t reg, uint8_t * buffer, uint8_t len)
 {
+  return true;
+}
+
+/**************************************************************************/
+/*!
+    @brief  Reads the specified number of bytes over I2C
+*/
+/**************************************************************************/
+bool Adafruit_BNO055::checkID()
+{
+  uint8_t id = read8(BNO055_CHIP_ID_ADDR);
+  if (id != BNO055_ID) {
+    sleep(1000); // hold on for boot
+    id = read8(BNO055_CHIP_ID_ADDR);
+    if (id != BNO055_ID) {
+      return false;  // still not? ok bail
+    }
+  }
   return true;
 }
