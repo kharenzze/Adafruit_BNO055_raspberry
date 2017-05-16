@@ -296,9 +296,8 @@ bool Adafruit_BNO055::checkID()
 void Adafruit_BNO055::reset()
 {
   write8(BNO055_SYS_TRIGGER_ADDR, 0x20);
-  while (read8(BNO055_CHIP_ID_ADDR) != BNO055_ID)
-  {
-    delay(10);
+  while (read8(BNO055_CHIP_ID_ADDR) != BNO055_ID) {
+    usleep(10000);
   }
-  delay(50);
+  usleep(50000);
 }
