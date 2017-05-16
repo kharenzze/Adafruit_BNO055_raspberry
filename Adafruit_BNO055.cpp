@@ -25,9 +25,10 @@
 
 #include <math.h>
 #include <limits.h>
-#include <unistd.h>
 
 #include "Adafruit_BNO055.h"
+
+#include <unistd.h>  //needed for delays
 
 /***************************************************************************
  CONSTRUCTOR
@@ -268,7 +269,7 @@ bool Adafruit_BNO055::checkID()
 {
   uint8_t id = read8(BNO055_CHIP_ID_ADDR);
   if (id != BNO055_ID) {
-    sleep(1000); // hold on for boot
+    sleep(1); // hold on for boot
     id = read8(BNO055_CHIP_ID_ADDR);
     if (id != BNO055_ID) {
       return false;  // still not? ok bail
