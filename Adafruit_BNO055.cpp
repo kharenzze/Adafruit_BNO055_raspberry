@@ -62,6 +62,11 @@ bool Adafruit_BNO055::begin(adafruit_bno055_opmode_t mode)
     return false;
   }
 
+  /* Switch to config mode (just in case since this is the default) */
+  setMode(OPERATION_MODE_CONFIG);
+
+  reset();
+
   return true;
 }
 
@@ -267,7 +272,7 @@ bool Adafruit_BNO055::readLen(adafruit_bno055_reg_t reg, uint8_t * buffer, uint8
 
 /**************************************************************************/
 /*!
-    @brief  Reads the specified number of bytes over I2C
+    @brief  Checks the ID of the connected device
 */
 /**************************************************************************/
 bool Adafruit_BNO055::checkID()
@@ -281,4 +286,19 @@ bool Adafruit_BNO055::checkID()
     }
   }
   return true;
+}
+
+/**************************************************************************/
+/*!
+    @brief  Reset the device
+*/
+/**************************************************************************/
+void Adafruit_BNO055::reset()
+{
+  write8(BNO055_SYS_TRIGGER_ADDR, 0x20);
+  while (read8(BNO055_CHIP_ID_ADDR) != BNO055_ID)
+  {
+    delay(10);
+  }
+  delay(50);
 }
