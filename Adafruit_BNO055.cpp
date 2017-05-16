@@ -29,6 +29,7 @@
 #include "Adafruit_BNO055.h"
 
 #include <unistd.h>  //needed for delays
+#include <sys/time.h> //needed for timestamp
 
 /***************************************************************************
  CONSTRUCTOR
@@ -373,7 +374,7 @@ bool Adafruit_BNO055::getEvent(sensors_event_t *event)
   event->version   = sizeof(sensors_event_t);
   event->sensor_id = _sensorID;
   event->type      = SENSOR_TYPE_ORIENTATION;
-  event->timestamp = millis();
+  event->timestamp = getTimestamp();
 
   /* Get a Euler angle sample for orientation */
   imu::Vector<3> euler = getVector(Adafruit_BNO055::VECTOR_EULER);
@@ -602,4 +603,17 @@ void Adafruit_BNO055::reset()
     usleep(10000);
   }
   usleep(50000);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Reset the device
+*/
+/**************************************************************************/
+long Adafruit_BNO055::getTimestamp()
+{
+  struct timeval tp;
+  gettimeofday(&tp, NULL);
+  long ms = tp.tv_sec * 1000 + tp.tv_usec / 1000;
+  return ms;
 }

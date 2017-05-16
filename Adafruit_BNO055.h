@@ -306,6 +306,7 @@ class Adafruit_BNO055 : public Adafruit_Sensor
     bool  write8  ( adafruit_bno055_reg_t, uint8_t value );
     bool checkID (void);
     void reset (void);   
+    long getTimestamp();
 
     uint8_t _address;
     int32_t _sensorID;
