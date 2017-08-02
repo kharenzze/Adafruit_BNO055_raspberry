@@ -30,6 +30,9 @@
 
 #include <unistd.h>  //needed for delays
 #include <sys/time.h> //needed for timestamp
+#include <stdio.h>
+#include <bitset>
+#include <iostream>
 
 /***************************************************************************
  CONSTRUCTOR
@@ -273,6 +276,10 @@ imu::Vector<3> Adafruit_BNO055::getVector(adafruit_vector_type_t vector_type)
   /* Read vector data (6 bytes) */
   readLen((adafruit_bno055_reg_t)vector_type, buffer, 6);
 
+  //fix z
+  uint8_t bit7_shifted_and_masked = (buffer[5] << 1) & 0x80;
+  buffer[5] = (buffer[5] & 0x7F) | bit7_shifted_and_masked;
+
   x = ((int16_t)buffer[0]) | (((int16_t)buffer[1]) << 8);
   y = ((int16_t)buffer[2]) | (((int16_t)buffer[3]) << 8);
   z = ((int16_t)buffer[4]) | (((int16_t)buffer[5]) << 8);
@@ -307,6 +314,13 @@ imu::Vector<3> Adafruit_BNO055::getVector(adafruit_vector_type_t vector_type)
       xyz[2] = ((double)z)/100.0;
       break;
   }
+
+  // std::bitset<16> xx(x);
+  // std::bitset<16> yy(y);
+  // std::bitset<16> zz(z);
+  // std::cout << xx << "\t\t"
+	//           << yy << "\t\t"
+	//           << zz << std::endl;
 
   return xyz;
 }
